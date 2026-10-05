@@ -5,6 +5,7 @@ app.py — точка входа Streamlit-приложения.
     * Бот №1 — Stateless
     * Бот №2 — Session (short-term)
     * Бот №3 — Hybrid (session + FAISS long-term)
+    * Бот №4 — Hybrid + Web Search (DuckDuckGo)
 
 Архитектура (см. README.md):
     src/
@@ -13,7 +14,7 @@ app.py — точка входа Streamlit-приложения.
       memory/          — стратегии памяти (Stateless / Session / Vector)
       bots/            — реализации ботов (наследники BaseBot)
       ui/              — sidebar и переиспользуемые компоненты
-      utils/           — потоковая генерация и хелперы
+      utils/           — потоковая генерация, web-поиск и хелперы
 """
 
 from __future__ import annotations
@@ -30,6 +31,9 @@ def _init_session_defaults() -> None:
         "bot1_messages": [],
         "bot2_messages": [],
         "bot3_messages": [],
+        "bot4_messages": [],
+        "bot4_last_snippets": [],
+        "bot4_web_search_enabled": True,
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -49,8 +53,13 @@ def main() -> None:
     model, temperature = render_sidebar()
     render_header()
 
-    tab1, tab2, tab3 = st.tabs(
-        ["Бот №1 (Без памяти)", "Бот №2 (Контекстный)", "Бот №3 (Гибридная память)"]
+    tab1, tab2, tab3, tab4 = st.tabs(
+        [
+            "Бот №1 (Без памяти)",
+            "Бот №2 (Контекстный)",
+            "Бот №3 (Гибридная память)",
+            "Бот №4 (Web-Search)",
+        ]
     )
 
     bots = build_bot_registry()
@@ -60,6 +69,8 @@ def main() -> None:
         bots["bot2_messages"].render(client, model, temperature)
     with tab3:
         bots["bot3_messages"].render(client, model, temperature)
+    with tab4:
+        bots["bot4_messages"].render(client, model, temperature)
 
 
 if __name__ == "__main__":

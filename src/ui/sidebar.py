@@ -19,11 +19,13 @@ def _bots_registry() -> dict[str, BaseBot]:
         from src.bots.stateless_bot import StatelessBot
         from src.bots.session_bot import SessionBot
         from src.bots.hybrid_bot import HybridBot
+        from src.bots.web_search_bot import WebSearchBot
 
         st.session_state["_bots"] = {
             "bot1_messages": StatelessBot("bot1_messages"),
             "bot2_messages": SessionBot("bot2_messages"),
             "bot3_messages": HybridBot("bot3_messages"),
+            "bot4_messages": WebSearchBot("bot4_messages"),
         }
     return st.session_state["_bots"]
 
@@ -56,7 +58,14 @@ def render_sidebar() -> tuple[str, float]:
         st.markdown("### Управление историей")
         target = st.selectbox(
             "Какую историю очистить?",
-            options=["Бот №1", "Бот №2", "Бот №3 (сессия)", "Бот №3 (долгосрочная)"],
+            options=[
+                "Бот №1",
+                "Бот №2",
+                "Бот №3 (сессия)",
+                "Бот №3 (долгосрочная)",
+                "Бот №4 (сессия)",
+                "Бот №4 (долгосрочная)",
+            ],
             index=0,
         )
         if st.button("🗑 Очистить выбранную историю", use_container_width=True):
@@ -69,6 +78,11 @@ def render_sidebar() -> tuple[str, float]:
                 bots["bot3_messages"].clear_session()
             elif target == "Бот №3 (долгосрочная)":
                 bots["bot3_messages"].memory.clear()
+            elif target == "Бот №4 (сессия)":
+                bots["bot4_messages"].clear_session()
+                st.session_state["bot4_last_snippets"] = []
+            elif target == "Бот №4 (долгосрочная)":
+                bots["bot4_messages"].memory.clear()
             st.success(f"Очищено: {target}")
             st.rerun()
         st.caption("Также кнопки очистки есть внутри каждой вкладки.")
@@ -84,7 +98,8 @@ def render_sidebar() -> tuple[str, float]:
         st.markdown(
             "**Бот №1** — без памяти (stateless)  \n"
             "**Бот №2** — контекстная (сессия)  \n"
-            "**Бот №3** — гибридная (векторная + сессия)"
+            "**Бот №3** — гибридная (векторная + сессия)  \n"
+            "**Бот №4** — гибридная + web-search (DuckDuckGo)"
         )
 
     return model, temperature
