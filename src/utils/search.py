@@ -90,9 +90,9 @@ def search_web(query: str, max_results: int = DEFAULT_MAX_RESULTS) -> List[Dict[
         return []
 
     try:
-        # Локальный импорт: duckduckgo-search опционален, без него бот
-        # просто работает без web-augmentation.
-        from duckduckgo_search import DDGS
+        # Локальный импорт: ddgs (бывший duckduckgo-search) опционален,
+        # без него бот просто работает без web-augmentation.
+        from ddgs import DDGS
     except Exception:  # noqa: BLE001
         return []
 
