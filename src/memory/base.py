@@ -32,6 +32,10 @@ class BaseMemory(ABC):
     def stats(self) -> Dict[str, Any]:
         """Произв��льная диагностическая информация для UI."""
 
+    def clear(self) -> None:  # noqa: D401
+        """Опциональный сброс хранилища. По умолчанию — no-op."""
+        return None
+
 
 class StatelessMemory(BaseMemory):
     """Никакой памяти: в LLM уходит только текущий prompt."""

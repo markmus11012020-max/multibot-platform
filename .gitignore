@@ -30,6 +30,10 @@ vector_store/faiss.index
 vector_store/metadata.json
 !vector_store/.gitkeep
 
+# Хронологическая история (SQLite, регенерируется приложением)
+history.db
+history.db-journal
+
 # Логи и кэши
 *.log
 .cache/

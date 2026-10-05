@@ -77,12 +77,12 @@ def render_sidebar() -> tuple[str, float]:
             elif target == "Бот №3 (сессия)":
                 bots["bot3_messages"].clear_session()
             elif target == "Бот №3 (долгосрочная)":
-                bots["bot3_messages"].memory.clear()
+                bots["bot3_messages"].memory.clear_long_term()
             elif target == "Бот №4 (сессия)":
                 bots["bot4_messages"].clear_session()
                 st.session_state["bot4_last_snippets"] = []
             elif target == "Бот №4 (долгосрочная)":
-                bots["bot4_messages"].memory.clear()
+                bots["bot4_messages"].memory.clear_long_term()
             st.success(f"Очищено: {target}")
             st.rerun()
         st.caption("Также кнопки очистки есть внутри каждой вкладки.")

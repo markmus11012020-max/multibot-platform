@@ -25,6 +25,9 @@ VECTOR_STORE_DIR.mkdir(exist_ok=True)
 INDEX_PATH: Path = VECTOR_STORE_DIR / "faiss.index"
 META_PATH: Path = VECTOR_STORE_DIR / "metadata.json"
 
+# Хронологическая история диалогов (SQLite, локальный файл).
+DB_PATH: Path = PROJECT_ROOT / "history.db"
+
 # ---------------------------------------------------------------------------
 # LLM / API
 # ---------------------------------------------------------------------------

@@ -37,6 +37,29 @@ class BaseBot(ABC):
 
     def clear_session(self) -> None:
         st.session_state[self.session_key] = []
+        # Если у памяти есть .clear() (SQLite/FAISS) — вызываем и его,
+        # чтобы ��нопка «Очистить историю сессии» чистила все слои разом.
+        if self.memory is not None and hasattr(self.memory, "clear"):
+            try:
+                self.memory.clear()
+            except Exception:  # noqa: BLE001
+                pass
+
+    def hydrate_from_db(self, limit: int = 50) -> None:
+        """
+        Если локальная сессия пуста — подтягивает историю из SQLite.
+        Делает UI и LLM-контекст консистентными после F5/перезапуска.
+        Безопасно вызывать для ботов без DB-памяти (Stateless).
+        """
+        if self.session_messages:
+            return
+        try:
+            from src.utils.db_history import get_chat_history
+        except Exception:  # noqa: BLE001
+            return
+        history = get_chat_history(self.session_key, limit=limit)
+        if history:
+            st.session_state[self.session_key] = history
 
     def _info(self) -> None:
         st.info(self.description)
