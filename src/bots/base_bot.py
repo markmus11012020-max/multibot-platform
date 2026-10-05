@@ -24,9 +24,9 @@ class BaseBot(ABC):
     title: str = "Bot"
     description: str = ""
 
-    def __init__(self, memory: BaseMemory, session_key: str):
-        self.memory = memory
+    def __init__(self, session_key: str | None = None, memory: BaseMemory | None = None):
         self.session_key = session_key
+        self.memory = memory
 
     # ---- helpers ----
     @property
